@@ -1,23 +1,6 @@
 {
   "compilerOptions": {
     "baseUrl": ".",
-    "paths": {
-      "@store": [
-        "./store.js"
-      ],
-      "@components/*": [
-        "components/*"
-      ],
-      "@utils/*": [
-        "utils/*"
-      ],
-      "@constants/*": [
-        "constants/*"
-      ],
-      "@features/*": [
-        "features/*"
-      ]
-    },
     "target": "es5",
     "lib": [
       "dom",

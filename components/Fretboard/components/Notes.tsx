@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { getNoteXYPosition } from '../utils';
 import { areNotesEqual } from 'utils/progression';
@@ -62,16 +61,6 @@ function NotePosition({
     );
 }
 
-NotePosition.propTypes = {
-    highlightedNotes: PropTypes.arrayOf(
-        PropTypes.oneOfType(PropTypes.shape({ note: PropTypes.object.isRequired, highlightColor: PropTypes.string }))
-    ).isRequired,
-    onPointerEnter: PropTypes.func.isRequired,
-    onPointerLeave: PropTypes.func.isRequired,
-    onPointerUp: PropTypes.func.isRequired,
-    onPointerDown: PropTypes.func.isRequired,
-};
-
 NotePosition.defaultProps = {
     onPointerEnter: () => {},
     onPointerLeave: () => {},
@@ -79,7 +68,21 @@ NotePosition.defaultProps = {
     onPointerDown: () => {},
 };
 
-function Notes({ notes, highlightedNotes, selectedNotes, stringCount, fretCount, notePointerEvents }) {
+type NotesProps = {
+    notes: any[][],
+    selectedNotes: any[],
+    highlightedNotes: { note: any, highlightColor: string }[],
+    stringCount: number,
+    fretCount: number,
+    notePointerEvents: {
+        onPointerEnter: (note: any) => void,
+        onPointerLeave: (note: any) => void,
+        onPointerUp: (note: any) => void,
+        onPointerDown: (note: any) => void,
+    },
+};
+
+function Notes({ notes, highlightedNotes, selectedNotes, stringCount, fretCount, notePointerEvents }: NotesProps) {
     return notes.map((notesOnString, stringNo) =>
         notesOnString.map((note, fretNo) => {
             return (

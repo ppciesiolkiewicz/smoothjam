@@ -16,7 +16,13 @@ function String({ stringCount, fretCount, stringNo, reversed }) {
     return <Line x1={x} x2="100%" y1={y} y2={y} strokeWidth={strokeWidth} />;
 }
 
-function Strings({ stringCount, fretCount, reversed }) {
+type StringsProps = {
+    stringCount: number,
+    fretCount: number,
+    reversed: boolean,
+};
+
+function Strings({ stringCount, fretCount, reversed }: StringsProps) {
     return times(stringCount, i => (
         <String key={i} stringCount={stringCount} fretCount={fretCount} stringNo={i} reversed={reversed} />
     ));

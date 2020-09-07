@@ -1,5 +1,4 @@
-import React, { useMemo, useState } from 'react';
-import PropTypes from 'prop-types';
+import React, { useMemo } from 'react';
 import styled, { ThemeProvider } from 'styled-components';
 import times from 'lodash.times';
 import { transpose } from '@tonaljs/core';
@@ -15,6 +14,31 @@ const Container = styled.div`
     width: 70%;
     user-select: none;
 `;
+
+type Fretboard = {
+    tuning: string[],
+    fretCount: number,
+    selectedNotes: string[],
+    highlightedNotes: { note: string, highlightColor: string }[],
+    theme: {
+        note: {
+            primary: {
+                fill: string,
+                stroke: string,
+            },
+        },
+        stringColor: string,
+        fretColor: string,
+    },
+    reversed: boolean,
+    notePointerEvents: {
+        onPointerEnter: (note: object) => void,
+        onPointerLeave: (note: object) => void,
+        onPointerDown: (note: object) => void,
+        onPointerUp: (note: object) => void,
+    },
+}
+
 
 function Fretboard({ fretCount, tuning, selectedNotes, highlightedNotes, theme, reversed, notePointerEvents }) {
     const stringCount = tuning.length;
@@ -66,32 +90,6 @@ function Fretboard({ fretCount, tuning, selectedNotes, highlightedNotes, theme, 
         </ThemeProvider>
     );
 }
-
-Fretboard.propTypes = {
-    tuning: PropTypes.arrayOf(PropTypes.string).isRequired,
-    fretCount: PropTypes.number.isRequired,
-    selectedNotes: PropTypes.arrayOf(PropTypes.string).isRequired,
-    highlightedNotes: PropTypes.arrayOf(
-        PropTypes.oneOfType(PropTypes.shape({ note: PropTypes.string.isRequired, highlightColor: PropTypes.string }))
-    ).isRequired,
-    theme: PropTypes.shape({
-        note: PropTypes.shape({
-            primary: PropTypes.shape({
-                fill: PropTypes.string.isRequired,
-                stroke: PropTypes.string.isRequired,
-            }).isRequired,
-        }).isRequired,
-        stringColor: PropTypes.string.isRequired,
-        fretColor: PropTypes.string.isRequired,
-    }).isRequired,
-    reversed: PropTypes.bool.isRequired,
-    notePointerEvents: PropTypes.shape({
-        onPointerEnter: PropTypes.func,
-        onPointerLeave: PropTypes.func,
-        onPointerDown: PropTypes.func,
-        onPointerUp: PropTypes.func,
-    }),
-};
 
 Fretboard.defaultProps = {
     tuning: ['E2', 'A2', 'D3', 'G3', 'B3', 'E4'],

@@ -25,7 +25,11 @@ function Fret({ fretCount, fretNo }) {
     return <Rect x={x} y="0" width="0.5" height="100%" />;
 }
 
-function Frets({ fretCount }) {
+type FretsProps = {
+    fretCount: number,
+};
+
+function Frets({ fretCount }: FretsProps) {
     return times(fretCount, i => <Fret key={i} fretCount={fretCount} fretNo={i} />);
 }
 

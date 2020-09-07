@@ -1,6 +1,5 @@
 import React, { useState, useMemo } from 'react';
 import styled from 'styled-components';
-import PropTypes from 'prop-types';
 import Chord from '@tombatossals/react-chords/lib/Chord';
 import { IconButton, Typography, Box } from '@material-ui/core';
 import { NavigateNext, NavigateBefore } from '@material-ui/icons';
@@ -12,7 +11,15 @@ const NavigationContainer = styled.div`
     justify-content: space-between;
 `;
 
-function Chords({ chord: { tonic, suffix, symbol } }) {
+type ChordProps = {
+    chord: {
+        tonic: string,
+        suffix: string,
+        symbol: string,
+    }
+}
+
+function ChordComponent({ chord: { tonic, suffix, symbol } }: ChordProps) {
     const [selectedPositionIdx, setSelectedPositionIdx] = useState(0);
     const chordPositions = useMemo(
         () =>
@@ -64,12 +71,4 @@ function Chords({ chord: { tonic, suffix, symbol } }) {
     );
 }
 
-Chords.propTypes = {
-    chord: PropTypes.shape({
-        tonic: PropTypes.string,
-        suffix: PropTypes.string,
-        symbol: PropTypes.string,
-    }),
-};
-
-export default Chords;
+export default ChordComponent;

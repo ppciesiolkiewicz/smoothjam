@@ -11,8 +11,12 @@ const Circle = styled.circle`
 
 const INLAYS_FRETS = [3, 5, 7, 10, 12];
 
-function Inlays({ fretCount }) {
-    return INLAYS_FRETS.map(fretNo => {
+type InlaysProps = {
+    fretCount: Number,
+}
+
+function Inlays({ fretCount }: InlaysProps) {
+    const inlays = INLAYS_FRETS.map(fretNo => {
         if (fretNo >= fretCount) {
             // TOOD: fix
             return null;
@@ -20,6 +24,8 @@ function Inlays({ fretCount }) {
         const [x, y] = getInlayXYPosition(fretNo, fretCount);
         return <Circle cx={`${x}%`} cy={`${y}%`} r="5" />;
     });
+
+    return <g>{inlays}</g>;
 }
 
 export default Inlays;

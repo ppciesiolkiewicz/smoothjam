@@ -18,7 +18,7 @@ function App() {
             <CssBaseline>
                 <Provider store={store}>
                     <ScaleVisualizer />
-                    <Metronome />
+                    {/* <Metronome /> */}
                     <Controls />
                     <ProgressionVisualizer />
                     <ChordVisualizer />
