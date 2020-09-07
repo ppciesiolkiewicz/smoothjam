@@ -13,7 +13,8 @@ const INLAYS_FRETS = [3, 5, 7, 10, 12];
 
 function Inlays({ fretCount }) {
     return INLAYS_FRETS.map(fretNo => {
-        if (fretNo >= fretCount) { // TOOD: fix
+        if (fretNo >= fretCount) {
+            // TOOD: fix
             return null;
         }
         const [x, y] = getInlayXYPosition(fretNo, fretCount);

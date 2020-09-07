@@ -16,9 +16,7 @@ function Chords({ chord: { tonic, suffix, symbol } }) {
     const [selectedPositionIdx, setSelectedPositionIdx] = useState(0);
     const chordPositions = useMemo(
         () =>
-            createCircularArray(
-                (guitarChords.chords?.[tonic] ?? []).find(c => c?.suffix === suffix)?.positions ?? []
-            ),
+            createCircularArray((guitarChords.chords?.[tonic] ?? []).find(c => c?.suffix === suffix)?.positions ?? []),
         [tonic, suffix]
     );
     const chordPosition = chordPositions?.[selectedPositionIdx];

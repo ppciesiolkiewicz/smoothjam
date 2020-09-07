@@ -5,7 +5,6 @@ import { PlayArrow, Stop } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 import { toggleStartMetronome, selectIsPlaying } from 'features/metronome/metronome.slice';
 
-
 const useStyles = makeStyles(theme => ({
     secondary: {
         backgroundColor: theme.palette.error.main,
