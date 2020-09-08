@@ -1,9 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Note, NoteLiteral } from '@tonaljs/tonal';
+import { NoteModule, NoteType } from 'utils/music';
+import type { RootState } from 'store';
 
 type PitchState = {
-    pitch: number,
-    note: NoteLiteral,
+    pitch?: number;
+    note?: NoteType;
 };
 
 const initialState: PitchState = {
@@ -17,10 +18,12 @@ const pitchSlice = createSlice({
     reducers: {
         setDetectedPitch: (state, action: PayloadAction<number>) => {
             state.pitch = action.payload;
-            state.note = Note.fromFreq(action.payload);
+            state.note = NoteModule.fromFreq(action.payload);
         },
     },
 });
+
+export const selectDetectedNote = (state: RootState): NoteType => state.pitch.note;
 
 export const { setDetectedPitch } = pitchSlice.actions;
 export default pitchSlice.reducer;

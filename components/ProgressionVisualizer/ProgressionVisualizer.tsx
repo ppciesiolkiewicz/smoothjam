@@ -37,7 +37,7 @@ const BeatProgressContainer = styled.div`
     display: flex;
 `;
 
-function ProgressionVisualizer() {
+function ProgressionVisualizer(): JSX.Element {
     const progressionChords = useSelector(selectProgressionChords);
     const currentBeat = useSelector(selectCurrentBeat);
     const beatCount = useSelector(selectBeatCount);
@@ -46,9 +46,9 @@ function ProgressionVisualizer() {
         <BeatProgressContainer>
             {progressionChords.map(({ chord: { symbol: chordSymbol }, beats }, chordNoInProgression) => {
                 const dots = Array(beats)
-                    .fill()
+                    .fill(null)
                     .map((_, i) => {
-                        let beatNo = chordNoInProgression * beats + i;
+                        const beatNo = chordNoInProgression * beats + i;
                         const isActive = beatNo === currentBeat % beatCount;
 
                         return (

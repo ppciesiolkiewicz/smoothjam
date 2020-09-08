@@ -11,7 +11,7 @@ export default class MyDocument extends Document {
         return { ...page, styleTags };
     }
 
-    render() {
+    render(): JSX.Element {
         return (
             <html lang="en">
                 <Head>{this.props.styleTags}</Head>

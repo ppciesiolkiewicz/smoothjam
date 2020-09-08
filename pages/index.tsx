@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import { Provider } from 'react-redux';
 import store from 'store';
 import Controls from 'components/Controls';
@@ -12,7 +12,7 @@ import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 
 const theme = createMuiTheme();
 
-function App() {
+function App(): JSX.Element {
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline>

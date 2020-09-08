@@ -4,7 +4,7 @@ import { Grid } from '@material-ui/core';
 import { selectProgressionChords } from 'features/progression/progression.slice';
 import Chord from 'components/Chord';
 
-function ChordVisualizer() {
+function ChordVisualizer(): JSX.Element {
     const progressionChords = useSelector(selectProgressionChords);
 
     return (

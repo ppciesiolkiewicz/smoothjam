@@ -1,38 +1,50 @@
-export const NOTE_RESOLUTION_16TH_NOTE = 0;
-export const NOTE_RESOLUTION_8TH_NOTE = 1;
-export const NOTE_RESOLUTION_4TH_NOTE = 2;
+import noop from 'lodash.noop';
+
+enum NOTE_RESOLUTION {
+    NOTE_16TH = 0,
+    NOTE_8TH = 1,
+    NOTE_4TH = 2,
+}
 
 class Metronome {
     static startDelta = 0.1;
     static scheduleAheadTime = 0.1;
     static lookahead = 25.0;
 
-    constructor(tickCallback, bpm) {
+    audioContext: AudioContext;
+    timerWorker: Worker;
+    isPlaying: boolean;
+    bpm: number;
+    noteResolution: NOTE_RESOLUTION;
+    nextNoteStartTime: number;
+    current16thNote: number;
+    tickCallback: () => void;
+
+    constructor(tickCallback: () => void, bpm: number) {
         if (!window.AudioContext) {
             throw new Error('AudioContext not supported');
         }
 
         this.audioContext = new AudioContext();
         this.timerWorker = this.createTimerWorker();
-
         this.isPlaying = false;
         this.bpm = bpm;
-        this.noteResolution = NOTE_RESOLUTION_4TH_NOTE;
+        this.noteResolution = NOTE_RESOLUTION.NOTE_4TH;
         this.nextNoteStartTime = 0;
         this.current16thNote = 0;
-        this.tickCallback = tickCallback || (() => {});
+        this.tickCallback = tickCallback || noop;
     }
 
-    get currentBeat() {
+    get currentBeat(): number {
         const RESOLUTION_MAP = {
-            0: 1,
-            1: 2,
-            2: 4,
+            [NOTE_RESOLUTION.NOTE_16TH]: 1,
+            [NOTE_RESOLUTION.NOTE_8TH]: 2,
+            [NOTE_RESOLUTION.NOTE_4TH]: 4,
         };
         return this.current16thNote / RESOLUTION_MAP[this.noteResolution];
     }
 
-    createTimerWorker() {
+    createTimerWorker(): Worker {
         const metronomeWorkerString = `
       let timerID=null;
       let interval=100;
@@ -72,22 +84,21 @@ class Metronome {
         return worker;
     }
 
-    schedule() {
+    schedule(): void {
         while (this.nextNoteStartTime < this.audioContext.currentTime + Metronome.scheduleAheadTime) {
             this.scheduleNote();
             this.nextNote();
         }
     }
 
-    scheduleNote() {
-        if (this.noteResolution === NOTE_RESOLUTION_8TH_NOTE && this.current16thNote % 2) {
+    scheduleNote(): void {
+        if (this.noteResolution === NOTE_RESOLUTION.NOTE_8TH && this.current16thNote % 2) {
             return;
         }
-        if (this.noteResolution === NOTE_RESOLUTION_4TH_NOTE && this.current16thNote % 4) {
+        if (this.noteResolution === NOTE_RESOLUTION.NOTE_4TH && this.current16thNote % 4) {
             return;
         }
-
-        this.tickCallback(this);
+        this.tickCallback();
 
         const oscillator = this.audioContext.createOscillator();
         oscillator.connect(this.audioContext.destination);
@@ -105,7 +116,7 @@ class Metronome {
         oscillator.stop(this.nextNoteStartTime + noteLength);
     }
 
-    nextNote() {
+    nextNote(): void {
         const _60_SECONDS = 60.0;
         const secondsPerBeat = _60_SECONDS / this.bpm;
         this.nextNoteStartTime += 0.25 * secondsPerBeat;
@@ -113,7 +124,7 @@ class Metronome {
         this.current16thNote++;
     }
 
-    toggleStart() {
+    toggleStart(): void {
         this.isPlaying = !this.isPlaying;
 
         if (this.isPlaying) {

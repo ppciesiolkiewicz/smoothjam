@@ -12,10 +12,10 @@ const Circle = styled.circle`
 const INLAYS_FRETS = [3, 5, 7, 10, 12];
 
 type InlaysProps = {
-    fretCount: Number,
-}
+    fretCount: number;
+};
 
-function Inlays({ fretCount }: InlaysProps) {
+function Inlays({ fretCount }: InlaysProps): JSX.Element {
     const inlays = INLAYS_FRETS.map(fretNo => {
         if (fretNo >= fretCount) {
             // TOOD: fix

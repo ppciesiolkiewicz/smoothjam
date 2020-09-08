@@ -4,7 +4,7 @@ import { usePrevious } from 'utils/hooks';
 import { setCurrentBeat, selectIsPlaying, selectBpm } from 'features/metronome/metronome.slice';
 import Metronome from 'utils/Metronome';
 
-function MetronomeComponent() {
+function MetronomeComponent(): null {
     const dispatch = useAppDispatch();
     const isPlaying = useAppSelector(selectIsPlaying);
     const bpm = useAppSelector(selectBpm);
@@ -21,16 +21,14 @@ function MetronomeComponent() {
         if (previousIsPlaying !== undefined) {
             metronome.current.toggleStart();
         }
-    }, [isPlaying])
+    }, [isPlaying]);
     useEffect(() => {
         if (previousBpm !== undefined) {
             metronome.current.bpm = bpm;
         }
-    }, [bpm])
-
+    }, [bpm]);
 
     return null;
 }
-
 
 export default MetronomeComponent;

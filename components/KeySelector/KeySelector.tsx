@@ -9,7 +9,7 @@ import {
 } from 'features/progression/progression.slice';
 import { Box, Select, MenuItem, InputLabel } from '@material-ui/core';
 
-function Controls() {
+function KeySelector(): JSX.Element {
     const dispatch = useAppDispatch();
     const handleKeyTonicChange = e => dispatch(setSelectedKeyTonic(e.target.value));
     const handleKeyTypeChange = e => dispatch(setSelectedKeyType(e.target.value));
@@ -42,4 +42,4 @@ function Controls() {
     );
 }
 
-export default Controls;
+export default KeySelector;

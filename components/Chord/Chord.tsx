@@ -13,13 +13,13 @@ const NavigationContainer = styled.div`
 
 type ChordProps = {
     chord: {
-        tonic: string,
-        suffix: string,
-        symbol: string,
-    }
-}
+        tonic: string;
+        suffix: string;
+        symbol: string;
+    };
+};
 
-function ChordComponent({ chord: { tonic, suffix, symbol } }: ChordProps) {
+function ChordComponent({ chord: { tonic, suffix, symbol } }: ChordProps): JSX.Element {
     const [selectedPositionIdx, setSelectedPositionIdx] = useState(0);
     const chordPositions = useMemo(
         () =>

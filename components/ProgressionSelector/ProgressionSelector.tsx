@@ -7,7 +7,7 @@ import {
 } from 'features/progression/progression.slice';
 import { Box, Select, MenuItem, InputLabel } from '@material-ui/core';
 
-function ProgressionSelector() {
+function ProgressionSelector(): JSX.Element {
     const dispatch = useDispatch();
     const handleProgressionIndexChange = e => dispatch(setSelectedProgressionIndex(e.target.value));
 

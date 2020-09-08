@@ -5,7 +5,7 @@ import StartStopButton from 'components/StartStopButton';
 import ProgressionSelector from 'components/ProgressionSelector';
 import KeySelector from 'components/KeySelector';
 
-function Controls() {
+function Controls(): JSX.Element {
     return (
         <Box>
             <StartStopButton />

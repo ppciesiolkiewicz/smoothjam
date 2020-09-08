@@ -1,10 +1,11 @@
 const getBoundedIndex = (arr, index) => {
-    let newPositionIdx = index % arr.length;
+    const newPositionIdx = index % arr.length;
     return newPositionIdx < 0 ? arr.length + newPositionIdx : newPositionIdx;
 };
 
-export default arr =>
-    new Proxy(arr, {
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export default function createCircularArray(arr) {
+    return new Proxy(arr, {
         get(target, propertyKey, receiver) {
             if (!isNaN(propertyKey)) {
                 propertyKey = getBoundedIndex(target, parseInt(propertyKey, 10));
@@ -26,3 +27,4 @@ export default arr =>
             return Reflect.apply(target, thisArgument, argumentsList);
         },
     });
+}

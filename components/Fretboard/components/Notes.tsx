@@ -1,9 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import { getNoteXYPosition } from '../utils';
-import { areNotesEqual } from 'utils/progression';
-import { Note as NoteType } from '@tonaljs/core';
-
+import { NoteModule } from 'utils/music';
+import { NoteType } from 'utils/music';
 
 const Circle = styled.circle`
     ${({ isHighlighted, highlightColor, theme: { note } }) => {
@@ -22,34 +21,48 @@ const Text = styled.text`
     pointer-events: none;
 `;
 
+type NotePositionProps = {
+    stringNo: number;
+    fretNo: number;
+    note: NoteType;
+    selectedNotes: NoteType[];
+    highlightedNotes: { note: NoteType; highlightColor: string }[];
+    stringCount: number;
+    fretCount: number;
+    onPointerEnter?: (note: NoteType) => void;
+    onPointerLeave?: (note: NoteType) => void;
+    onPointerUp?: (note: NoteType) => void;
+    onPointerDown?: (note: NoteType) => void;
+};
+
 function NotePosition({
-    selectedNotes,
-    highlightedNotes,
     stringNo,
     fretNo,
+    note,
+    selectedNotes,
+    highlightedNotes,
     fretCount,
     stringCount,
-    note,
     onPointerEnter,
     onPointerLeave,
     onPointerUp,
     onPointerDown,
-}) {
+}: NotePositionProps) {
     const [x, y] = getNoteXYPosition(stringNo, stringCount, fretNo, fretCount);
 
-    if (selectedNotes?.length && !selectedNotes.find(sn => areNotesEqual(sn, note))) {
+    if (selectedNotes?.length && !selectedNotes.find(sn => NoteModule.areNotesEqual(sn, note))) {
         return null;
     }
 
-    const highlight = highlightedNotes?.length && highlightedNotes.find(hn => areNotesEqual(hn.note, note));
+    const highlight = highlightedNotes?.length && highlightedNotes.find(hn => NoteModule.areNotesEqual(hn.note, note));
 
     return (
         <g>
             <Circle
-                onPointerEnter={() => onPointerEnter(note)}
-                onPointerLeave={() => onPointerLeave(note)}
-                onPointerUp={() => onPointerUp(note)}
-                onPointerDown={() => onPointerDown(note)}
+                onPointerEnter={() => onPointerEnter && onPointerEnter(note)}
+                onPointerLeave={() => onPointerLeave && onPointerLeave(note)}
+                onPointerUp={() => onPointerUp && onPointerUp(note)}
+                onPointerDown={() => onPointerDown && onPointerDown(note)}
                 isHighlighted={highlight}
                 highlightColor={highlight?.highlightColor}
                 cx={`${x}%`}
@@ -63,28 +76,28 @@ function NotePosition({
     );
 }
 
-NotePosition.defaultProps = {
-    onPointerEnter: () => {},
-    onPointerLeave: () => {},
-    onPointerUp: () => {},
-    onPointerDown: () => {},
-};
-
 type NotesProps = {
-    notes: NoteType[][],
-    selectedNotes: NoteType[],
-    highlightedNotes: { note: NoteType, highlightColor: string }[],
-    stringCount: number,
-    fretCount: number,
-    notePointerEvents: {
-        onPointerEnter: (note: NoteType) => void,
-        onPointerLeave: (note: NoteType) => void,
-        onPointerUp: (note: NoteType) => void,
-        onPointerDown: (note: NoteType) => void,
-    },
+    notes: NoteType[][];
+    selectedNotes: NoteType[];
+    highlightedNotes: { note: NoteType; highlightColor: string }[];
+    stringCount: number;
+    fretCount: number;
+    notePointerEvents?: {
+        onPointerEnter: (note: NoteType) => void;
+        onPointerLeave: (note: NoteType) => void;
+        onPointerUp: (note: NoteType) => void;
+        onPointerDown: (note: NoteType) => void;
+    };
 };
 
-function Notes({ notes, highlightedNotes, selectedNotes, stringCount, fretCount, notePointerEvents }: NotesProps) {
+function Notes({
+    notes,
+    highlightedNotes,
+    selectedNotes,
+    stringCount,
+    fretCount,
+    notePointerEvents,
+}: NotesProps): JSX.Element {
     const notesOnFrets = notes.map((notesOnString, stringNo) =>
         notesOnString.map((note, fretNo) => {
             return (
@@ -103,8 +116,7 @@ function Notes({ notes, highlightedNotes, selectedNotes, stringCount, fretCount,
         })
     );
 
-
-    return <g>{notesOnFrets}</g>
+    return <g>{notesOnFrets}</g>;
 }
 
 export default Notes;

@@ -9,11 +9,14 @@ const SET_BPM_DEBOUNCE_WAIT = 100;
 const MIN_BPM = 30;
 const MAX_BPM = 220;
 
-function BpmController() {
+function BpmController(): JSX.Element {
     const dispatch = useAppDispatch();
     const bpm = useAppSelector(selectBpm);
     const [localBpm, setLocalBpm] = useState(bpm);
-    const debouncedSetBpm = useCallback(debounce(bpm => dispatch(setBpm(bpm)), SET_BPM_DEBOUNCE_WAIT));
+    const debouncedSetBpm = useCallback(
+        debounce(bpm => dispatch(setBpm(bpm)), SET_BPM_DEBOUNCE_WAIT),
+        []
+    );
     const handleBpmChange = (_, value) => {
         setLocalBpm(value);
         debouncedSetBpm(value);

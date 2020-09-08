@@ -7,7 +7,14 @@ const Line = styled.line`
     ${({ theme: { stringColor } }) => `stroke: ${stringColor};`}
 `;
 
-function String({ stringCount, fretCount, stringNo, reversed }) {
+type StringProps = {
+    stringNo: number;
+    stringCount: number;
+    fretCount: number;
+    reversed: boolean;
+};
+
+function String({ stringCount, fretCount, stringNo, reversed }: StringProps): JSX.Element {
     const yPos = getStringYPosition(stringCount, stringNo);
     const xPos = getFretXPosition(fretCount, 1);
     const strokeWidth = reversed ? 0.5 * (stringNo + 1) : 0.5 * (stringCount - stringNo + 1);
@@ -17,12 +24,12 @@ function String({ stringCount, fretCount, stringNo, reversed }) {
 }
 
 type StringsProps = {
-    stringCount: number,
-    fretCount: number,
-    reversed: boolean,
+    stringCount: number;
+    fretCount: number;
+    reversed: boolean;
 };
 
-function Strings({ stringCount, fretCount, reversed }: StringsProps) {
+function Strings({ stringCount, fretCount, reversed }: StringsProps): JSX.Element {
     return times(stringCount, i => (
         <String key={i} stringCount={stringCount} fretCount={fretCount} stringNo={i} reversed={reversed} />
     ));

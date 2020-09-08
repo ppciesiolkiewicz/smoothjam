@@ -10,7 +10,12 @@ const Rect = styled.rect`
     `}
 `;
 
-function Fret({ fretCount, fretNo }) {
+type FretProps = {
+    fretNo: number;
+    fretCount: number;
+};
+
+function Fret({ fretCount, fretNo }: FretProps): JSX.Element {
     const xPos = getFretXPosition(fretCount, fretNo);
     const x = `${xPos}%`;
 
@@ -26,10 +31,10 @@ function Fret({ fretCount, fretNo }) {
 }
 
 type FretsProps = {
-    fretCount: number,
+    fretCount: number;
 };
 
-function Frets({ fretCount }: FretsProps) {
+function Frets({ fretCount }: FretsProps): JSX.Element {
     return times(fretCount, i => <Fret key={i} fretCount={fretCount} fretNo={i} />);
 }
 

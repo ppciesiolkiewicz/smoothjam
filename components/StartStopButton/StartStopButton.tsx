@@ -20,7 +20,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-function StartStopButton() {
+function StartStopButton(): JSX.Element {
     const classes = useStyles();
     const dispatch = useDispatch();
     const toggleStart = () => dispatch(toggleStartMetronome());

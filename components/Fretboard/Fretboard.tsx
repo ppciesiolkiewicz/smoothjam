@@ -1,13 +1,10 @@
 import React, { useMemo } from 'react';
 import styled, { ThemeProvider } from 'styled-components';
-import times from 'lodash.times';
-import { transpose } from '@tonaljs/core';
-import { Interval, Note } from '@tonaljs/tonal';
+import { NoteType, NoteModule } from 'utils/music';
 import Strings from './components/Strings';
 import Frets from './components/Frets';
 import Inlays from './components/Inlays';
 import Notes from './components/Notes';
-import { Note as NoteType, NoteLiteral } from '@tonaljs/core';
 
 const Container = styled.div`
     margin: 50px;
@@ -16,48 +13,48 @@ const Container = styled.div`
     user-select: none;
 `;
 
-type Fretboard = {
-    tuning: NoteLiteral[],
-    fretCount: number,
-    selectedNotes: NoteLiteral[],
-    highlightedNotes: { note: NoteLiteral, highlightColor: string }[],
+type FretboardProps = {
+    tuning: string[];
+    fretCount: number;
+    selectedNotes: string[];
+    highlightedNotes: { note: string; highlightColor: string }[];
     theme: {
         note: {
             primary: {
-                fill: string,
-                stroke: string,
-            },
-        },
-        stringColor: string,
-        fretColor: string,
-    },
-    reversed: boolean,
-    notePointerEvents: {
-        onPointerEnter: (note: NoteType) => void,
-        onPointerLeave: (note: NoteType) => void,
-        onPointerDown: (note: NoteType) => void,
-        onPointerUp: (note: NoteType) => void,
-    },
-}
+                fill: string;
+                stroke: string;
+            };
+        };
+        stringColor: string;
+        fretColor: string;
+    };
+    reversed: boolean;
+    notePointerEvents?: {
+        onPointerEnter: (note: NoteType) => void;
+        onPointerLeave: (note: NoteType) => void;
+        onPointerDown: (note: NoteType) => void;
+        onPointerUp: (note: NoteType) => void;
+    };
+};
 
-
-function Fretboard({ fretCount, tuning, selectedNotes, highlightedNotes, theme, reversed, notePointerEvents }) {
+function Fretboard({
+    fretCount,
+    tuning,
+    selectedNotes,
+    highlightedNotes,
+    theme,
+    reversed,
+    notePointerEvents,
+}: FretboardProps): JSX.Element {
     const stringCount = tuning.length;
-    const selectedNotesObj = useMemo(() => selectedNotes.map(n => Note.get(n)), [selectedNotes]);
-    const highlightedNotesObj = useMemo(() => highlightedNotes.map(n => ({ ...n, note: Note.get(n.note) })), [
+    const selectedNotesObj = useMemo(() => selectedNotes.map(n => NoteModule.get(n)), [selectedNotes]);
+    const highlightedNotesObj = useMemo(() => highlightedNotes.map(n => ({ ...n, note: NoteModule.get(n.note) })), [
         highlightedNotes,
     ]);
 
     const notes = useMemo(() => {
         const t = reversed ? tuning.slice(0).reverse() : tuning;
-        return t.map(rootNote => {
-            return times(fretCount - 1, fretNo => {
-                const noteSymbol = transpose(rootNote, Interval.fromSemitones(fretNo));
-                const note = Note.get(noteSymbol);
-
-                return note;
-            });
-        });
+        return NoteModule.getGuitarNotes(t, fretCount);
     }, [tuning, fretCount, reversed]);
 
     return (
