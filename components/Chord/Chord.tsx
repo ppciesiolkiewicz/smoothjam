@@ -4,7 +4,7 @@ import Chord from '@tombatossals/react-chords/lib/Chord';
 import { IconButton, Typography, Box } from '@material-ui/core';
 import { NavigateNext, NavigateBefore } from '@material-ui/icons';
 import createCircularArray from 'utils/CircularArray';
-import { guitarChords } from 'constants/chords';
+import { guitarChords } from './chords';
 
 const NavigationContainer = styled.div`
     display: flex;
