@@ -1,53 +1,36 @@
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useEffect, useRef } from 'react';
+import { useAppDispatch, useAppSelector } from 'store';
+import { usePrevious } from 'utils/hooks';
 import { setCurrentBeat, selectIsPlaying, selectBpm } from 'features/metronome/metronome.slice';
 import Metronome from 'utils/Metronome';
 
-// class MetronomeComponent extends Component {
-//     componentDidMount() {
-//         const { setCurrentBeat } = this.props;
-//         this.metronome = new Metronome(() => {
-//             setCurrentBeat(this.metronome.currentBeat);
-//         });
-//     }
-
-//     componentDidUpdate(prevProps) {
-//         const { isPlaying, bpm } = this.props;
-//         const { isPlaying: prevIsPlaying, bpm: prevBpm } = prevProps;
-
-//         if (isPlaying !== prevIsPlaying) {
-//             this.metronome.toggleStart();
-//         } else if (bpm !== prevBpm) {
-//             this.metronome.bpm = bpm;
-//         }
-//     }
-
-//     render() {
-//         return null;
-//     }
-// }
-
-// const mapStateToProps = ({ metronome: { isPlaying, bpm } }) => ({
-//     isPlaying,
-//     bpm,
-// });
-
-
-function Metronome() {
-    const dispatch = useDispatch();
-    const isPlaying = useSelector(selectIsPlaying);
-    const bpm = useSelector(selectBpm);
+function MetronomeComponent() {
+    const dispatch = useAppDispatch();
+    const isPlaying = useAppSelector(selectIsPlaying);
+    const bpm = useAppSelector(selectBpm);
+    const previousBpm = usePrevious(bpm);
+    const previousIsPlaying = usePrevious(isPlaying);
+    const metronome = useRef(null);
 
     useEffect(() => {
-        this.metronome = new Metronome(() => {
-            setCurrentBeat(this.metronome.currentBeat);
-        });  
-    });
+        metronome.current = new Metronome(() => {
+            dispatch(setCurrentBeat(metronome.current.currentBeat));
+        }, bpm);
+    }, []);
+    useEffect(() => {
+        if (previousIsPlaying !== undefined) {
+            metronome.current.toggleStart();
+        }
+    }, [isPlaying])
+    useEffect(() => {
+        if (previousBpm !== undefined) {
+            metronome.current.bpm = bpm;
+        }
+    }, [bpm])
 
 
     return null;
 }
 
-// export default connect(mapStateToProps, { setCurrentBeat })(MetronomeComponent);
 
-export default Metronome;
+export default MetronomeComponent;

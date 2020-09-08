@@ -1,5 +1,5 @@
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useAppSelector, useAppDispatch } from 'store';
 import {
     setSelectedKeyTonic,
     setSelectedKeyType,
@@ -10,15 +10,15 @@ import {
 import { Box, Select, MenuItem, InputLabel } from '@material-ui/core';
 
 function Controls() {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const handleKeyTonicChange = e => dispatch(setSelectedKeyTonic(e.target.value));
     const handleKeyTypeChange = e => dispatch(setSelectedKeyType(e.target.value));
 
-    const keyTonic = useSelector(selectSelectedKeyTonic);
-    const keyType = useSelector(selectSelectedKeyType);
+    const keyTonic = useAppSelector(selectSelectedKeyTonic);
+    const keyType = useAppSelector(selectSelectedKeyType);
 
-    const availableKeyTonics = useSelector(selectAvailableKeys);
-    const availableKeyTypes = useSelector(state => state.progression.availableKeyTypes);
+    const availableKeyTonics = useAppSelector(selectAvailableKeys);
+    const availableKeyTypes = useAppSelector(state => state.progression.availableKeyTypes);
 
     return (
         <Box>

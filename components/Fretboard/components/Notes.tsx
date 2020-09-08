@@ -2,6 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import { getNoteXYPosition } from '../utils';
 import { areNotesEqual } from 'utils/progression';
+import { Note as NoteType } from '@tonaljs/core';
+
 
 const Circle = styled.circle`
     ${({ isHighlighted, highlightColor, theme: { note } }) => {
@@ -69,21 +71,21 @@ NotePosition.defaultProps = {
 };
 
 type NotesProps = {
-    notes: any[][],
-    selectedNotes: any[],
-    highlightedNotes: { note: any, highlightColor: string }[],
+    notes: NoteType[][],
+    selectedNotes: NoteType[],
+    highlightedNotes: { note: NoteType, highlightColor: string }[],
     stringCount: number,
     fretCount: number,
     notePointerEvents: {
-        onPointerEnter: (note: any) => void,
-        onPointerLeave: (note: any) => void,
-        onPointerUp: (note: any) => void,
-        onPointerDown: (note: any) => void,
+        onPointerEnter: (note: NoteType) => void,
+        onPointerLeave: (note: NoteType) => void,
+        onPointerUp: (note: NoteType) => void,
+        onPointerDown: (note: NoteType) => void,
     },
 };
 
 function Notes({ notes, highlightedNotes, selectedNotes, stringCount, fretCount, notePointerEvents }: NotesProps) {
-    return notes.map((notesOnString, stringNo) =>
+    const notesOnFrets = notes.map((notesOnString, stringNo) =>
         notesOnString.map((note, fretNo) => {
             return (
                 <NotePosition
@@ -100,6 +102,9 @@ function Notes({ notes, highlightedNotes, selectedNotes, stringCount, fretCount,
             );
         })
     );
+
+
+    return <g>{notesOnFrets}</g>
 }
 
 export default Notes;

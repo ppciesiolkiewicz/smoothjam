@@ -7,6 +7,7 @@ import Strings from './components/Strings';
 import Frets from './components/Frets';
 import Inlays from './components/Inlays';
 import Notes from './components/Notes';
+import { Note as NoteType, NoteLiteral } from '@tonaljs/core';
 
 const Container = styled.div`
     margin: 50px;
@@ -16,10 +17,10 @@ const Container = styled.div`
 `;
 
 type Fretboard = {
-    tuning: string[],
+    tuning: NoteLiteral[],
     fretCount: number,
-    selectedNotes: string[],
-    highlightedNotes: { note: string, highlightColor: string }[],
+    selectedNotes: NoteLiteral[],
+    highlightedNotes: { note: NoteLiteral, highlightColor: string }[],
     theme: {
         note: {
             primary: {
@@ -32,10 +33,10 @@ type Fretboard = {
     },
     reversed: boolean,
     notePointerEvents: {
-        onPointerEnter: (note: object) => void,
-        onPointerLeave: (note: object) => void,
-        onPointerDown: (note: object) => void,
-        onPointerUp: (note: object) => void,
+        onPointerEnter: (note: NoteType) => void,
+        onPointerLeave: (note: NoteType) => void,
+        onPointerDown: (note: NoteType) => void,
+        onPointerUp: (note: NoteType) => void,
     },
 }
 

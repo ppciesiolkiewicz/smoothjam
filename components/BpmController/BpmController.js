@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useAppSelector, useAppDispatch } from 'store';
 import { setBpm } from 'features/metronome/metronome.slice';
 import { selectBpm } from 'features/metronome/metronome.slice';
 import { Box, Slider, InputLabel } from '@material-ui/core';
@@ -10,8 +10,8 @@ const MIN_BPM = 30;
 const MAX_BPM = 220;
 
 function BpmController() {
-    const dispatch = useDispatch();
-    const bpm = useSelector(selectBpm);
+    const dispatch = useAppDispatch();
+    const bpm = useAppSelector(selectBpm);
     const [localBpm, setLocalBpm] = useState(bpm);
     const debouncedSetBpm = useCallback(debounce(bpm => dispatch(setBpm(bpm)), SET_BPM_DEBOUNCE_WAIT));
     const handleBpmChange = (_, value) => {

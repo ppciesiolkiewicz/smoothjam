@@ -7,7 +7,7 @@ class Metronome {
     static scheduleAheadTime = 0.1;
     static lookahead = 25.0;
 
-    constructor(tickCallback) {
+    constructor(tickCallback, bpm) {
         if (!window.AudioContext) {
             throw new Error('AudioContext not supported');
         }
@@ -16,7 +16,7 @@ class Metronome {
         this.timerWorker = this.createTimerWorker();
 
         this.isPlaying = false;
-        this.bpm = 120;
+        this.bpm = bpm;
         this.noteResolution = NOTE_RESOLUTION_4TH_NOTE;
         this.nextNoteStartTime = 0;
         this.current16thNote = 0;

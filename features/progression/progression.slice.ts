@@ -1,6 +1,7 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { createChordProgression, getKey, getScale } from 'utils/progression';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createChordProgression, getScale } from 'utils/progression';
 import { Scale } from '@tonaljs/tonal';
+import type { RootState } from 'store';
 
 const availableProgressions = {
     major: [
@@ -32,18 +33,34 @@ const availableProgressions = {
         },
     ],
 };
-const availableKeyTonics = ['C', 'C#', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'Ab', 'A', 'Bb', 'B'];
-const availableKeyTypes = Scale.names().sort();
+
+type ProgressionState = {
+    availableKeyTonics: string[] ,
+    availableProgressions: {
+        [keyType: string]: {
+            numerals: string[],
+            name: string,
+        }[]
+    },
+    availableKeyTypes: string[],
+    selectedProgressionIndex: number,
+    selectedKeyTonic: string,
+    selectedKeyType: string,
+    progressionChords: ReturnType<typeof createChordProgression>,
+    scale: ReturnType<typeof Scale.get>,
+};
+
+const availableKeyTonics: string[] = ['C', 'C#', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'Ab', 'A', 'Bb', 'B'];
+const availableKeyTypes: string[] = Scale.names().sort();
 
 const initialProgressionIndex = 0;
 const initialKeyTonic = 'C';
 const initialKeyType = 'major';
 
-const initialState = {
+const initialState: ProgressionState = {
     availableKeyTonics,
     availableProgressions,
     availableKeyTypes,
-
     selectedProgressionIndex: initialProgressionIndex,
     selectedKeyTonic: initialKeyTonic,
     selectedKeyType: initialKeyType,
@@ -51,7 +68,6 @@ const initialState = {
         initialKeyTonic,
         availableProgressions[initialKeyType][initialProgressionIndex].numerals
     ),
-    key: getKey(initialKeyTonic, initialKeyType),
     scale: getScale(initialKeyTonic, initialKeyType),
 };
 
@@ -59,26 +75,24 @@ const progressionSlice = createSlice({
     name: 'progression',
     initialState,
     reducers: {
-        setSelectedKeyTonic: (state, action) => {
+        setSelectedKeyTonic: (state, action: PayloadAction<string>) => {
             state.selectedKeyTonic = action.payload;
-            state.key = getKey(state.selectedKeyTonic, state.selectedKeyType);
             state.scale = getScale(state.selectedKeyTonic, state.selectedKeyType);
             state.progressionChords = createChordProgression(
                 state.selectedKeyTonic,
                 availableProgressions?.[state.selectedKeyType]?.[state.selectedProgressionIndex]?.numerals
             );
         },
-        setSelectedKeyType: (state, action) => {
+        setSelectedKeyType: (state, action: PayloadAction<string>) => {
             state.selectedKeyType = action.payload;
             state.selectedProgressionIndex = 0;
-            state.key = getKey(state.selectedKeyTonic, state.selectedKeyType);
             state.scale = getScale(state.selectedKeyTonic, state.selectedKeyType);
             state.progressionChords = createChordProgression(
                 state.selectedKeyTonic,
                 availableProgressions?.[state.selectedKeyType]?.[state.selectedProgressionIndex]?.numerals
             );
         },
-        setSelectedProgressionIndex: (state, action) => {
+        setSelectedProgressionIndex: (state, action: PayloadAction<number>) => {
             state.selectedProgressionIndex = action.payload;
             state.progressionChords = createChordProgression(
                 state.selectedKeyTonic,
@@ -88,17 +102,17 @@ const progressionSlice = createSlice({
     },
 });
 
-export const selectProgressionChords = state => state.progression.progressionChords;
-export const selectSelectedKeyTonic = state => state.progression.selectedKeyTonic;
-export const selectSelectedKeyType = state => state.progression.selectedKeyType;
-export const selectSelectedProgressionIndex = state => state.progression.selectedProgressionIndex;
-export const selectBeatCount = state => state.progression.progressionChords.reduce((acc, { beats }) => acc + beats, 0);
-export const selectAvailableKeys = state => state.progression.availableKeyTonics;
+export const selectProgressionChords = (state: RootState) => state.progression.progressionChords;
+export const selectSelectedKeyTonic = (state: RootState) => state.progression.selectedKeyTonic;
+export const selectSelectedKeyType = (state: RootState) => state.progression.selectedKeyType;
+export const selectSelectedProgressionIndex = (state: RootState) => state.progression.selectedProgressionIndex;
+export const selectBeatCount = (state: RootState) => state.progression.progressionChords.reduce((acc, { beats }) => acc + beats, 0);
+export const selectAvailableKeys = (state: RootState) => state.progression.availableKeyTonics;
 const defaultAvailableProgressions = [];
-export const selectAvailableProgressions = ({ progression }) =>
-    progression.availableProgressions[progression.selectedKeyType] || defaultAvailableProgressions;
-export const selectSelectedProgressionIndexIndex = ({ progression }) => progression.selectedProgressionIndex;
-export const selectScale = ({ progression }) => progression.scale;
+export const selectAvailableProgressions = (state: RootState) =>
+    state.progression.availableProgressions[state.progression.selectedKeyType] || defaultAvailableProgressions;
+export const selectSelectedProgressionIndexIndex = (state: RootState) => state.progression.selectedProgressionIndex;
+export const selectScale = (state: RootState) => state.progression.scale;
 
 export const { setSelectedKeyTonic, setSelectedKeyType, setSelectedProgressionIndex } = progressionSlice.actions;
 export default progressionSlice.reducer;

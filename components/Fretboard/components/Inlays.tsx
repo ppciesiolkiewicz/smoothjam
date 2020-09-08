@@ -22,7 +22,7 @@ function Inlays({ fretCount }: InlaysProps) {
             return null;
         }
         const [x, y] = getInlayXYPosition(fretNo, fretCount);
-        return <Circle cx={`${x}%`} cy={`${y}%`} r="5" />;
+        return <Circle key={fretNo} cx={`${x}%`} cy={`${y}%`} r="5" />;
     });
 
     return <g>{inlays}</g>;
