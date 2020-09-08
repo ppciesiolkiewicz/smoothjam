@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import React from 'react';
 import Document, { Head, Main, NextScript } from 'next/document';
 import { ServerStyleSheet } from 'styled-components';
 
-export default class MyDocument extends Document {
+export default class RootDocument extends Document {
     static getInitialProps({ renderPage }) {
         const sheet = new ServerStyleSheet();
         const page = renderPage(App => props => sheet.collectStyles(<App {...props} />));
@@ -11,7 +12,7 @@ export default class MyDocument extends Document {
         return { ...page, styleTags };
     }
 
-    render(): JSX.Element {
+    render() {
         return (
             <html lang="en">
                 <Head>{this.props.styleTags}</Head>
