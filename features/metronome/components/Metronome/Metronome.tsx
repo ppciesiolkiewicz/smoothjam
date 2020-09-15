@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useAppDispatch, useAppSelector } from 'store';
 import { usePrevious } from 'utils/hooks';
 import { setCurrentBeat, selectIsPlaying, selectBpm } from 'features/metronome/metronome.slice';
-import Metronome from 'utils/Metronome';
+import Metronome from './utils/Metronome';
 
 function MetronomeComponent(): null {
     const dispatch = useAppDispatch();
