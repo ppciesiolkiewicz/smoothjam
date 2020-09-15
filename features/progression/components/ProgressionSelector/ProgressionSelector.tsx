@@ -1,18 +1,25 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import {
-    setSelectedProgressionIndex,
-    selectAvailableProgressions,
-    selectSelectedProgressionIndexIndex,
-} from 'features/progression/progression.slice';
 import { Box, Select, MenuItem, InputLabel } from '@material-ui/core';
+import { availableProgressions, initialProgressionIndex } from 'features/progression/constants';
+import { setSelectedProgression, selectSelectedKeyType } from 'features/progression/progression.slice';
 
 function ProgressionSelector(): JSX.Element {
     const dispatch = useDispatch();
-    const handleProgressionIndexChange = e => dispatch(setSelectedProgressionIndex(e.target.value));
+    const selectedKeyType = useSelector(selectSelectedKeyType);
+    const [selectedProgressionIndex, setSelectedProgressionIndex] = useState(initialProgressionIndex);
+    const progressionsInKeyType = availableProgressions[selectedKeyType] || [];
 
-    const availableProgressions = useSelector(selectAvailableProgressions);
-    const selectedProgressionIndex = useSelector(selectSelectedProgressionIndexIndex);
+    useEffect(() => {
+        const newIndex = 0;
+        setSelectedProgressionIndex(newIndex);
+        dispatch(setSelectedProgression(progressionsInKeyType[newIndex]));
+    }, [selectedKeyType]);
+
+    const handleProgressionIndexChange = e => {
+        setSelectedProgressionIndex(e.target.value);
+        dispatch(setSelectedProgression(progressionsInKeyType[selectedProgressionIndex]));
+    };
 
     return (
         <Box>
@@ -22,7 +29,7 @@ function ProgressionSelector(): JSX.Element {
                 value={selectedProgressionIndex}
                 onChange={handleProgressionIndexChange}
             >
-                {availableProgressions.map((p, index) => (
+                {progressionsInKeyType.map((p, index) => (
                     <MenuItem key={index} value={index}>
                         {p.name}
                     </MenuItem>

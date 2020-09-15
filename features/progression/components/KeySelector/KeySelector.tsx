@@ -5,8 +5,8 @@ import {
     setSelectedKeyType,
     selectSelectedKeyTonic,
     selectSelectedKeyType,
-    selectAvailableKeys,
 } from 'features/progression/progression.slice';
+import { availableKeyTonics, availableKeyTypes } from 'features/progression/constants';
 import { Box, InputLabel, TextField, NoSsr } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 
@@ -17,9 +17,6 @@ function KeySelector(): JSX.Element {
 
     const keyTonic = useAppSelector(selectSelectedKeyTonic);
     const keyType = useAppSelector(selectSelectedKeyType);
-
-    const availableKeyTonics = useAppSelector(selectAvailableKeys);
-    const availableKeyTypes = useAppSelector(state => state.progression.availableKeyTypes);
 
     return (
         <Box>
