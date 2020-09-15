@@ -7,12 +7,13 @@ import {
     selectSelectedKeyType,
     selectAvailableKeys,
 } from 'features/progression/progression.slice';
-import { Box, Select, MenuItem, InputLabel } from '@material-ui/core';
+import { Box, InputLabel, TextField, NoSsr } from '@material-ui/core';
+import { Autocomplete } from '@material-ui/lab';
 
 function KeySelector(): JSX.Element {
     const dispatch = useAppDispatch();
-    const handleKeyTonicChange = e => dispatch(setSelectedKeyTonic(e.target.value));
-    const handleKeyTypeChange = e => dispatch(setSelectedKeyType(e.target.value));
+    const handleKeyTonicChange = (_, newValue) => dispatch(setSelectedKeyTonic(newValue));
+    const handleKeyTypeChange = (_, newValue) => dispatch(setSelectedKeyType(newValue));
 
     const keyTonic = useAppSelector(selectSelectedKeyTonic);
     const keyType = useAppSelector(selectSelectedKeyType);
@@ -23,21 +24,35 @@ function KeySelector(): JSX.Element {
     return (
         <Box>
             <InputLabel id="key-select-label">Key</InputLabel>
-
-            <Select labelId="key-select-label" value={keyTonic} onChange={handleKeyTonicChange}>
-                {availableKeyTonics.map(k => (
-                    <MenuItem key={k} value={k}>
-                        {k}
-                    </MenuItem>
-                ))}
-            </Select>
-            <Select value={keyType} onChange={handleKeyTypeChange}>
-                {availableKeyTypes.map((t, index) => (
-                    <MenuItem key={index} value={t}>
-                        {t}
-                    </MenuItem>
-                ))}
-            </Select>
+            <NoSsr>
+                <Box display="flex" flexDirection="row" mt={2}>
+                    <Autocomplete
+                        id="key-type-tonic"
+                        options={availableKeyTonics}
+                        disableClearable
+                        openOnFocus
+                        blurOnSelect
+                        clearOnBlur
+                        value={keyTonic}
+                        onChange={handleKeyTonicChange}
+                        getOptionLabel={option => option}
+                        style={{ width: 300 }}
+                        renderInput={params => <TextField {...params} label="Key" variant="outlined" />}
+                    />
+                    <Autocomplete
+                        id="key-type-select"
+                        options={availableKeyTypes}
+                        disableClearable
+                        openOnFocus
+                        blurOnSelect
+                        value={keyType}
+                        onChange={handleKeyTypeChange}
+                        getOptionLabel={option => option}
+                        style={{ width: 300 }}
+                        renderInput={params => <TextField {...params} label="Key type" variant="outlined" />}
+                    />
+                </Box>
+            </NoSsr>
         </Box>
     );
 }
