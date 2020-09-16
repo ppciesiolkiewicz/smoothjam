@@ -23,7 +23,7 @@ export const availableProgressions = {
             name: 'I-IIIm-VIm-IIm-V',
         },
     ],
-    minor: [
+    'melodic minor': [
         {
             numerals: ['I', 'IIIm', 'VIm', 'IIm', 'V'],
             name: 'I-IIIm-VIm-IIm-V',
