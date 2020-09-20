@@ -25,14 +25,16 @@ class Metronome {
             throw new Error('AudioContext not supported');
         }
 
-        this.audioContext = new AudioContext();
-        this.timerWorker = this.createTimerWorker();
-        this.isPlaying = false;
-        this.bpm = bpm;
-        this.noteResolution = NOTE_RESOLUTION.NOTE_4TH;
-        this.nextNoteStartTime = 0;
-        this.current16thNote = 0;
-        this.tickCallback = tickCallback || noop;
+        navigator.mediaDevices.getUserMedia({ audio: true }).then(() => {
+            this.audioContext = new AudioContext();
+            this.timerWorker = this.createTimerWorker();
+            this.isPlaying = false;
+            this.bpm = bpm;
+            this.noteResolution = NOTE_RESOLUTION.NOTE_4TH;
+            this.nextNoteStartTime = 0;
+            this.current16thNote = 0;
+            this.tickCallback = tickCallback || noop;
+        });
     }
 
     get currentBeat(): number {

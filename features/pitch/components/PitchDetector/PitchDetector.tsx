@@ -34,17 +34,17 @@ function PitchDetector({
 
     useEffect(() => {
         if (!navigator.getUserMedia) {
-            alert('Your browser cannot stream from your webcam. Please switch to Chrome or Firefox.');
+            alert('Your browser cannot record audio. Please switch to Chrome or Firefox.');
             return;
         }
 
-        const audioContext = new window.AudioContext();
-        const analyserNode = audioContext.createAnalyser();
-        analyserNode.minDecibels = analyserMinDecibels;
-        analyserNode.maxDecibels = analyserMaxDecibels;
-        analyserNode.smoothingTimeConstant = analyserSmoothingTimeConstant;
-
         navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+            const audioContext = new window.AudioContext();
+            const analyserNode = audioContext.createAnalyser();
+            analyserNode.minDecibels = analyserMinDecibels;
+            analyserNode.maxDecibels = analyserMaxDecibels;
+            analyserNode.smoothingTimeConstant = analyserSmoothingTimeConstant;
+
             const sourceNode = audioContext.createMediaStreamSource(stream);
             sourceNode.connect(analyserNode);
             const detector = PD.forFloat32Array(analyserNode.fftSize);
