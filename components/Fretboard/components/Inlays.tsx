@@ -9,7 +9,7 @@ const Circle = styled.circle`
     `}
 `;
 
-const INLAYS_FRETS = [3, 5, 7, 10, 12];
+const INLAYS_FRETS = [3, 5, 7, 9, 12];
 
 type InlaysProps = {
     fretCount: number;
