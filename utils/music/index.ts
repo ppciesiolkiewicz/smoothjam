@@ -79,7 +79,7 @@ export const ScaleModule = {
         let keyChords;
         if (keyType === 'major') {
             keyChords = TonalKey.majorKey(keyTonic);
-        } else if (keyType === 'minor') {
+        } else if (keyType === 'melodic minor') {
             keyChords = TonalKey.majorKey(TonalKey.minorKey(keyTonic).relativeMajor);
         }
 
