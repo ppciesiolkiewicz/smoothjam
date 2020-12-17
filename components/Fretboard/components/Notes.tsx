@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import { getNoteXYPosition } from '../utils';
 import { NoteModule } from 'utils/music';
 import { NoteType } from 'utils/music';
+import { Note } from '@tonaljs/core';
+import { NoNote } from '@tonaljs/tonal';
 
 const Circle = styled.circle`
     ${({ isHighlighted, highlightColor, theme: { note } }) => {
@@ -26,6 +28,7 @@ type NotePositionProps = {
     fretNo: number;
     note: NoteType;
     selectedNotes: NoteType[];
+    intervals?: string[];
     highlightedNotes: { note: NoteType; highlightColor: string }[];
     stringCount: number;
     fretCount: number;
@@ -40,6 +43,7 @@ function NotePosition({
     fretNo,
     note,
     selectedNotes,
+    intervals,
     highlightedNotes,
     fretCount,
     stringCount,
@@ -49,11 +53,12 @@ function NotePosition({
     onPointerDown,
 }: NotePositionProps) {
     const [x, y] = getNoteXYPosition(stringNo, stringCount, fretNo, fretCount);
+    const noteIndex = selectedNotes.findIndex(sn => NoteModule.areNotesEqual(sn, note));
 
-    if (selectedNotes?.length && !selectedNotes.find(sn => NoteModule.areNotesEqual(sn, note))) {
+    if (selectedNotes?.length && noteIndex === -1) {
         return null;
     }
-
+    const interval = intervals && intervals[noteIndex];
     const highlight = highlightedNotes?.length && highlightedNotes.find(hn => NoteModule.areNotesEqual(hn.note, note));
 
     return (
@@ -70,7 +75,7 @@ function NotePosition({
                 r="20"
             ></Circle>
             <Text x={`${x}%`} y={`${y}%`} textAnchor="middle" strokeWidth="0.5" fontSize="10" dy=".3em">
-                {note.name}
+                {note.name} {interval && `/ ${interval}`}
             </Text>
         </g>
     );
@@ -79,6 +84,7 @@ function NotePosition({
 type NotesProps = {
     notes: NoteType[][];
     selectedNotes: NoteType[];
+    intervals?: string[];
     highlightedNotes: { note: NoteType; highlightColor: string }[];
     stringCount: number;
     fretCount: number;
@@ -94,6 +100,7 @@ function Notes({
     notes,
     highlightedNotes,
     selectedNotes,
+    intervals,
     stringCount,
     fretCount,
     notePointerEvents,
@@ -105,6 +112,7 @@ function Notes({
                     key={note.name}
                     highlightedNotes={highlightedNotes}
                     selectedNotes={selectedNotes}
+                    intervals={intervals}
                     stringCount={stringCount}
                     fretCount={fretCount}
                     stringNo={stringNo}

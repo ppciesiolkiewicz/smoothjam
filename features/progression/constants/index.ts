@@ -7,10 +7,6 @@ export const availableProgressions = {
             name: 'I-IV-V',
         },
         {
-            numerals: ['I', 'IV', 'V'],
-            name: 'I-IV-V',
-        },
-        {
             numerals: ['I', 'IIm', 'V'],
             name: 'I-IIm-V',
         },

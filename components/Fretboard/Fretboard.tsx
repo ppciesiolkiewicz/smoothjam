@@ -9,7 +9,7 @@ import Notes from './components/Notes';
 const Container = styled.div`
     margin: 50px;
     height: 300px;
-    width: 70%;
+    width: 90%;
     user-select: none;
 `;
 
@@ -17,6 +17,7 @@ type FretboardProps = {
     tuning: string[];
     fretCount: number;
     selectedNotes: string[];
+    intervals?: string[];
     highlightedNotes: { note: string; highlightColor: string }[];
     theme: {
         note: {
@@ -41,6 +42,7 @@ function Fretboard({
     fretCount,
     tuning,
     selectedNotes,
+    intervals,
     highlightedNotes,
     theme,
     reversed,
@@ -78,6 +80,7 @@ function Fretboard({
                         notes={notes}
                         highlightedNotes={highlightedNotesObj}
                         selectedNotes={selectedNotesObj}
+                        intervals={intervals}
                         stringCount={stringCount}
                         fretCount={fretCount}
                         notePointerEvents={notePointerEvents}

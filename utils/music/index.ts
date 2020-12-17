@@ -6,6 +6,7 @@ import {
     Progression as TonalProgression,
     Chord as TonalChord,
     Scale as TonalScale,
+    Key as TonalKey,
 } from '@tonaljs/tonal';
 
 export interface ChordType extends ReturnType<typeof TonalChord.get> {
@@ -14,6 +15,7 @@ export interface ChordType extends ReturnType<typeof TonalChord.get> {
 
 export interface ScaleType extends ReturnType<typeof TonalScale.get> {
     readonly chordTypes: ReturnType<typeof TonalScale.scaleChords>;
+    readonly allChords: ChordType[];
 }
 
 export type ChordProgressionType = {
@@ -42,19 +44,27 @@ export const NoteModule = {
     },
 };
 
+const ChordModule = {
+    get: (chordName: string): ChordType => {
+        const chord = TonalChord.get(chordName);
+        const { type, tonic, symbol } = chord;
+        const suffix = ['major', 'minor'].indexOf(type) !== -1 ? type : symbol.slice(tonic.length);
+
+        return {
+            ...chord,
+            suffix,
+        };
+    },
+};
+
 export const ChordProgressionModule = {
     create: (keyTonic: string, progressionNumerals: string[]): ChordProgressionType => {
         progressionNumerals = progressionNumerals || [];
         return TonalProgression.fromRomanNumerals(keyTonic, progressionNumerals).map(chordName => {
-            const chord = TonalChord.get(chordName);
-            const { type, tonic, symbol } = chord;
-            const suffix = ['major', 'minor'].indexOf(type) !== -1 ? type : symbol.slice(tonic.length);
+            const chord = ChordModule.get(chordName);
 
             return {
-                chord: {
-                    ...chord,
-                    suffix,
-                },
+                chord,
                 beats: 4,
             };
         });
@@ -66,9 +76,29 @@ export const ScaleModule = {
         const scale = TonalScale.get(`${keyTonic} ${keyType}`);
         const scaleChordTypes = TonalScale.scaleChords(`${keyTonic} ${keyType}`);
 
+        let keyChords;
+        if (keyType === 'major') {
+            keyChords = TonalKey.majorKey(keyTonic);
+        } else if (keyType === 'minor') {
+            keyChords = TonalKey.majorKey(TonalKey.minorKey(keyTonic).relativeMajor);
+        }
+
+        const allChords = keyChords
+            ? [
+                  ...keyChords.chords,
+                  ...keyChords.secondaryDominants,
+                  ...keyChords.secondaryDominantsMinorRelative,
+                  ...keyChords.substituteDominants,
+                  ...keyChords.substituteDominantsMinorRelative,
+              ]
+                  .filter(Boolean)
+                  .map(ChordModule.get)
+            : [];
+
         return {
             ...scale,
             chordTypes: scaleChordTypes,
+            allChords,
         };
     },
     names: TonalScale.names,
