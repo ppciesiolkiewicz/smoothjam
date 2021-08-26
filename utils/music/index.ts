@@ -46,14 +46,19 @@ export const NoteModule = {
 
 const ChordModule = {
     get: (chordName: string): ChordType => {
-        const chord = TonalChord.get(chordName);
-        const { type, tonic, symbol } = chord;
-        const suffix = ['major', 'minor'].indexOf(type) !== -1 ? type : symbol.slice(tonic.length);
+        try {
+            const chord = TonalChord.get(chordName);
+            const { type, tonic, symbol } = chord;
+            const suffix = ['major', 'minor'].indexOf(type) !== -1 ? type : symbol.slice(tonic.length);
 
-        return {
-            ...chord,
-            suffix,
-        };
+            return {
+                ...chord,
+                suffix,
+            };
+        } catch (e) {
+            console.log(`[error] ChordModule.get(${chordName})`, e);
+            return null;
+        }
     },
 };
 
@@ -73,8 +78,10 @@ export const ChordProgressionModule = {
 
 export const ScaleModule = {
     get: (keyTonic: string, keyType: string): ScaleType => {
+        console.log(`Getting ${keyTonic} ${keyType}`);
         const scale = TonalScale.get(`${keyTonic} ${keyType}`);
         const scaleChordTypes = TonalScale.scaleChords(`${keyTonic} ${keyType}`);
+        console.log(`${keyTonic} ${keyType}: `, scale, scaleChordTypes);
 
         let keyChords;
         if (keyType === 'major') {
@@ -93,6 +100,7 @@ export const ScaleModule = {
               ]
                   .filter(Boolean)
                   .map(ChordModule.get)
+                  .filter(Boolean)
             : [];
 
         return {
